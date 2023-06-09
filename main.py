@@ -1,15 +1,10 @@
 import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import csv
-from selenium.webdriver.chrome.service import Service
-
 from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.firefox import GeckoDriverManager
 
-# Логин и пароль от вашей почты
+# Логин и пароль, кому, список адресов
 EMAIL = 'fkp50/denis.osipov'
 PASSWORD = '1CK4pu6NRF'
 email_to = 'Sonic269@yandex.ru'
@@ -25,7 +20,7 @@ spisok_adressov = ['Sonic269@yandex.ru',"Sonic144@mail.ru"]
 # запускаем браузер
 driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
 
-# Переходим на страницу авторизации
+# Переходим на страницу авторизации почты
 driver.get('https://exc50mail.fkp50.local/owa/#path=/mail')
 
 # Выставляем тайминги задержки чтобы браузер успел прогрузить страницу
@@ -44,6 +39,7 @@ passwordElem.send_keys(PASSWORD)
 passwordElem.submit()
 time.sleep(3)
 
+# Функция отправки почты
 def sendder(email_to):
     # Жмем на кнопку "Создать"
     creat = driver.find_element(By.XPATH,'//button[@title="Создать новое сообщение (N)"]').click()
@@ -55,7 +51,6 @@ def sendder(email_to):
     time.sleep(3)
 
     # Заполняем поле тема
-
     tema = driver.find_element(By.XPATH , "//input[@placeholder='Добавьте тему']")
     tema.send_keys('Тестовая тема')
     time.sleep(2)
@@ -66,9 +61,15 @@ def sendder(email_to):
     telo_pisma.send_keys('Тут будет тема письма')
     time.sleep(2)
 
-    # Жмем отправить
-    send = driver.find_element(By.XPATH,'//button[@title="Отправить"]').click()
+    # Добавляем вложение
+    app = driver.find_element(By.XPATH , "//input[@type='file']").send_keys(r'C:\Users\denis.osipov\PycharmProjects\Selenium_parsing_saitov\Вложения\1.txt')
+    time.sleep(2)
 
+
+    # Жмем отправить
+    # send = driver.find_element(By.XPATH,'//button[@title="Отправить"]').click()
+
+# Отправляем по списку адресов
 vsego_adressov = len(spisok_adressov)
 otpravleno = vsego_adressov
 for i in spisok_adressov:
